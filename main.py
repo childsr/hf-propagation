@@ -2,8 +2,11 @@ import math
 import cmd
 
 E = 1.60217663 * 10 ** -19
+"""Elementary charge (e) in coulombs"""
 EPSILON_0 = 8.8541878188 * 10 ** -12
-C = 299792458
+"""Vacuum Permittivity (ε₀) in farads per meter"""
+C = 299_792_458
+"""Speed of light in vacuum (c) in meters per second"""
 
 def collision_frequency(altitude: float) -> float:
   """Get the collision frequency (ν) at the given altitude
@@ -33,8 +36,8 @@ def electron_density(altitude: float) -> float:
     the electron density (n_e)
   """
   return 1.0
-def kappa(altitude: float) -> float:
-  """Calculate the coefficient of absorption (κ) at the given altitude
+def neutral_density(altitude: float) -> float:
+  """Get the neutral density (n_n) at the given altitude
 
   Parameter
   ---------
@@ -44,16 +47,69 @@ def kappa(altitude: float) -> float:
   Returns
   -------
   float
+    the neutral density (n_e)
+  """
+  return 1.0
+def kappa1(altitude: float, frequency: float) -> float:
+  """Calculate the coefficient of absorption (κ) at the given altitude
+  in cases where wave frequency is much greater than collision frequency.
+
+  Parameter
+  ---------
+  altitude : float
+    altitude above sea level in km
+  frequency : float
+    signal frequency in Hz
+
+  Returns
+  -------
+  float
     the coefficient of absorption (κ)
   """
   return 1.0
-def absorption_at(altitude: float) -> float:
+def kappa2(altitude: float, frequency: float) -> float:
+  """Calculate the coefficient of absorption (κ) at the given altitude
+  in cases where collision frequency is much greater than wave frequency.
+
+  Parameter
+  ---------
+  altitude : float
+    altitude above sea level in km
+  frequency : float
+    signal frequency in Hz
+
+  Returns
+  -------
+  float
+    the coefficient of absorption (κ)
+  """
+  return 1.0
+def kappa3(altitude: float, frequency: float) -> float:
+  """Calculate the coefficient of absorption (κ) at the given altitude
+  in cases where wave frequency is about equal to collision frequency.
+
+  Parameter
+  ---------
+  altitude : float
+    altitude above sea level in km
+  frequency : float
+    signal frequency in Hz
+
+  Returns
+  -------
+  float
+    the coefficient of absorption (κ)
+  """
+  return 1.0
+def absorption_at(altitude: float, frequency: float) -> float:
   """Calculate absorption at the given altitude
 
   Parameter
   ---------
   altitude : float
     altitude above sea level in km
+  frequency : float
+    signal frequency in Hz
 
   Returns
   -------
@@ -63,7 +119,7 @@ def absorption_at(altitude: float) -> float:
   return 1.0
 
 def integrate(takeOffAngle: float, distToRec: float, frequency: float, resolution: float = 1) -> float:
-  """Calculate total absorption in dB
+  """Calculate total absorption (L_a) in dB
 
   Parameters
   ----------
@@ -99,7 +155,7 @@ def integrate(takeOffAngle: float, distToRec: float, frequency: float, resolutio
     h = h_0 + i * delta_h
     delta_x = delta_h / math.tan(theta)
     delta_s = math.sqrt(delta_x ** 2 + delta_h ** 2)
-    delta_L_a = absorption_at(h) * delta_s
+    delta_L_a = absorption_at(h,frequency) * delta_s
 
     x += delta_x
     s += delta_s
@@ -109,4 +165,4 @@ def integrate(takeOffAngle: float, distToRec: float, frequency: float, resolutio
 
 result = integrate(35, 200, 1)
 print("")
-print(f"Total absorption: {round(result,3)} dB")
+print(f"Total ionospheric absorption: {round(result,3)} dB")
