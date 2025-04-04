@@ -1,0 +1,3 @@
+#!/bin/bash
+
+curl https://services.swpc.noaa.gov/text/drap_global_frequencies.txt
